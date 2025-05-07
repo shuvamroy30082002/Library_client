@@ -120,7 +120,8 @@ export default function DashboardPage() {
   const [isDarkMode, setIsDarkMode] = useState(false); // Theme state
 
   return (
-    <div className={`flex flex-col md:flex-row min-h-screen ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+ 
+    <div className={`flex min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Sidebar */}
       <Sidebar
         setActiveComponent={setActiveComponent}
@@ -129,7 +130,8 @@ export default function DashboardPage() {
       />
 
       {/* Main Content */}
-      <div className="flex-1 p-4 md:p-8">
+      
+      <div className="flex-1 overflow-y-auto h-screen p-4 md:p-8">
         <h1 className={`text-xl md:text-2xl font-bold ${
           isDarkMode ? 'text-indigo-400' : 'text-indigo-700'
         } mb-4 md:mb-6`}>

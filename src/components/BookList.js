@@ -1,183 +1,32 @@
 
 
-// // client/components/BookList.js
+
+
+
 // 'use client';
 
 // import { useEffect, useState } from "react";
 // import axios from "axios";
 // import IssueBook from "./IssueBook";
+// import ConfirmationModal from "./ConfirmationModal";
 
-// const BookList = () => {
-//   const [books, setBooks] = useState([]); // State to store the list of books
-//   const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
-//   const [currentPage, setCurrentPage] = useState(1); // Current page
-//   const [loading, setLoading] = useState(true); // State to track loading status
-//   const [error, setError] = useState(null); // State to handle errors
-//   const [searchTerm, setSearchTerm] = useState(""); // State for search input
-//   const [selectedBook, setSelectedBook] = useState(null); // State to manage the issue modal
-
-//   useEffect(() => {
-//     const fetchBooks = async () => {
-//       try {
-//         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/books/displaybooks`, {
-//           params: { page: currentPage, limit: 7 }, // Fetch 6 books per page
-//         });
-//         setBooks(response.data.books);
-//         setTotalPages(response.data.totalPages);
-//       } catch (err) {
-//         setError("Failed to fetch books. Please try again.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchBooks();
-//   }, [currentPage, searchTerm]);
-
-//   const handleSearch = (e) => {
-//     setSearchTerm(e.target.value);
-//     setCurrentPage(1); // Reset to the first page when searching
-//   };
-
-//   const filteredBooks = books.filter((book) =>
-//     book.bookNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-//     book.nameOfBook.toLowerCase().includes(searchTerm.toLowerCase()) ||
-//     book.nameOfAuthor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-//     book.medium.toLowerCase().includes(searchTerm.toLowerCase())
-//   );
-
-//   if (loading) {
-//     return <p className="text-center text-gray-700">Loading books...</p>;
-//   }
-
-//   if (error) {
-//     return <p className="text-center text-red-500">{error}</p>;
-//   }
-
-//   return (
-//     <div className="bg-white p-6 rounded-lg shadow-md">
-//       {/* Search Input */}
-//       <input
-//         type="text"
-//         placeholder="Search by Book No, Title, Author, or Medium"
-//         value={searchTerm}
-//         onChange={handleSearch}
-//         className="w-full px-3 py-2 mb-4 border border-gray-300 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-//       />
-
-//       {/* Table */}
-//       <div className="overflow-x-auto">
-//         <table className="min-w-full divide-y divide-gray-200">
-//           <thead className="bg-gray-50">
-//             <tr>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Book No
-//               </th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Title
-//               </th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Author
-//               </th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Medium
-//               </th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Actions
-//               </th>
-//             </tr>
-//           </thead>
-//           <tbody className="divide-y divide-gray-200">
-//             {filteredBooks.length > 0 ? (
-//               filteredBooks.map((book) => (
-//                 <tr key={book._id} className={book.isIssued ? "bg-yellow-100" : ""}>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-//                     {book.bookNo}
-//                   </td>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.nameOfBook}</td>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.nameOfAuthor}</td>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.medium}</td>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-//                     <button
-//                       onClick={() => setSelectedBook(book)}
-//                       className="py-1 px-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-//                     >
-//                       Issue Book
-//                     </button>
-//                   </td>
-//                 </tr>
-//               ))
-//             ) : (
-//               <tr>
-//                 <td colSpan="5" className="px-6 py-4 text-center text-gray-700">
-//                   No books found.
-//                 </td>
-//               </tr>
-//             )}
-//           </tbody>
-//         </table>
-//       </div>
-
-//       {/* Pagination */}
-//       <div className="flex justify-between items-center mt-4">
-//         <button
-//           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-//           disabled={currentPage === 1}
-//           className="py-2 px-4 border border-gray-300 rounded-md text-black bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
-//         >
-//           Previous
-//         </button>
-//         <span className="text-gray-700">
-//           Page {currentPage} of {totalPages}
-//         </span>
-//         <button
-//           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-//           disabled={currentPage === totalPages}
-//           className="py-2 px-4 border border-gray-300 text-black rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
-//         >
-//           Next
-//         </button>
-//       </div>
-
-//       {/* IssueBook Modal */}
-//       {selectedBook && (
-//         <IssueBook
-//           book={selectedBook}
-//           onClose={() => setSelectedBook(null)}
-//         />
-//       )}
-//     </div>
-//   );
-// };
-
-// export default BookList;
-
-// // client/components/BookList.js
-// 'use client';
-
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import IssueBook from "./IssueBook";
-// import ConfirmationModal from "./ConfirmationModal"; // Import the ConfirmationModal
-
-// const BookList = () => {
-//   const [books, setBooks] = useState([]); // State to store the list of books
-//   const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
-//   const [currentPage, setCurrentPage] = useState(1); // Current page
-//   const [loading, setLoading] = useState(true); // State to track loading status
-//   const [error, setError] = useState(null); // State to handle errors
-//   const [searchTerm, setSearchTerm] = useState(""); // State for search input
-//   const [selectedBook, setSelectedBook] = useState(null); // State to manage the issue modal
-
-//   // State for confirmation modal
+// const BookList = ({ isDarkMode }) => {
+//   const [books, setBooks] = useState([]);
+//   const [totalPages, setTotalPages] = useState(1);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [selectedBook, setSelectedBook] = useState(null);
 //   const [isModalOpen, setIsModalOpen] = useState(false);
 //   const [bookToDelete, setBookToDelete] = useState(null);
+//   const [filter, setFilter] = useState("All"); // NEW
 
 //   useEffect(() => {
 //     const fetchBooks = async () => {
 //       try {
 //         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/books/displaybooks`, {
-//           params: { page: currentPage, limit: 7 }, // Fetch 7 books per page
+//           params: { page: currentPage, limit: 6 },
 //         });
 //         setBooks(response.data.books);
 //         setTotalPages(response.data.totalPages);
@@ -189,108 +38,153 @@
 //     };
 
 //     fetchBooks();
-//   }, [currentPage, searchTerm]);
+//   }, [currentPage]);
 
 //   const handleSearch = (e) => {
 //     setSearchTerm(e.target.value);
-//     setCurrentPage(1); // Reset to the first page when searching
+//     setCurrentPage(1);
 //   };
 
 //   const handleDelete = async () => {
 //     try {
 //       const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/books/delete/${bookToDelete._id}`);
 //       if (response.data.success) {
-//         // Remove the deleted book from the local state
 //         setBooks((prevBooks) => prevBooks.filter((book) => book._id !== bookToDelete._id));
-//         setIsModalOpen(false); // Close the modal
-//         setBookToDelete(null); // Reset the book to delete
+//         setIsModalOpen(false);
+//         setBookToDelete(null);
 //       }
 //     } catch (err) {
 //       alert(err.response?.data?.message || "Failed to delete the book.");
 //     }
 //   };
 
-//   const filteredBooks = books.filter((book) =>
+//   // Apply search filter
+//   let filteredBooks = books.filter((book) =>
 //     book.bookNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
 //     book.nameOfBook.toLowerCase().includes(searchTerm.toLowerCase()) ||
 //     book.nameOfAuthor.toLowerCase().includes(searchTerm.toLowerCase()) ||
 //     book.medium.toLowerCase().includes(searchTerm.toLowerCase())
 //   );
 
+//   // Apply prefix filter
+//   if (filter === "P") {
+//     filteredBooks = filteredBooks.filter((book) => book.bookNo.startsWith("P -"));
+//   } else if (filter === "S") {
+//     filteredBooks = filteredBooks.filter((book) => book.bookNo.startsWith("S -"));
+//   }
+
 //   if (loading) {
-//     return <p className="text-center text-gray-700">Loading books...</p>;
+//     return <p className="text-center text-gray-600 text-lg">Loading books...</p>;
 //   }
 
 //   if (error) {
-//     return <p className="text-center text-red-500">{error}</p>;
+//     return <p className="text-center text-red-500 text-lg">{error}</p>;
 //   }
 
 //   return (
-//     <div className="bg-white p-6 rounded-lg shadow-md relative">
-//       {/* Search Input */}
-//       <input
-//         type="text"
-//         placeholder="Search by Book No, Title, Author, or Medium"
-//         value={searchTerm}
-//         onChange={handleSearch}
-//         className="w-full px-3 py-2 mb-4 border border-gray-300 text-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-//       />
+//     <div className={`p-8 rounded-2xl shadow-xl border transition-colors duration-300 ${
+//       isDarkMode ? 'bg-[#1e1e2f] text-white border-gray-700' : 'bg-pink-100 text-gray-900 border-gray-200'
+//     }`}>
 
-//       {/* Display Total Available Books */}
-//       <div className="mb-4">
-//         <p className="text-lg font-medium text-gray-700">
-//           Total Available Books:{" "}
-//           <span className="text-indigo-600 font-bold">
-//             {books.filter((book) => !book.isIssued).length}
-//           </span>
-//         </p>
+//       {/* Search Bar */}
+//       <div className="mb-6">
+//         <input
+//           type="text"
+//           placeholder="🔍 Search by Book No, Title, Author, or Medium"
+//           value={searchTerm}
+//           onChange={handleSearch}
+//           className={`w-full px-4 py-3 rounded-xl border text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm transition ${
+//             isDarkMode ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-800 border-gray-300'
+//           }`}
+//         />
+//       </div>
+
+//       {/* Filter Buttons */}
+//       <div className="flex gap-3 mb-6">
+//         {["All", "P", "S"].map((type) => (
+//           <button
+//             key={type}
+//             onClick={() => setFilter(type)}
+//             className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+//               filter === type
+//                 ? 'bg-indigo-600 text-white'
+//                 : isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-700'
+//             }`}
+//           >
+//             {type === "All" ? "All Books" : `Books Starting with ${type}`}
+//           </button>
+//         ))}
+//       </div>
+
+//       {/* Total Count */}
+//       <div className="mb-4 text-lg font-semibold">
+//         📚 Displaying: <span className="text-indigo-600 font-bold">{filteredBooks.length}</span> books
 //       </div>
 
 //       {/* Table */}
-//       <div className="overflow-x-auto">
-//         <table className="min-w-full divide-y divide-gray-200">
-//           <thead className="bg-gray-50">
+//       <div className={`overflow-x-auto rounded-lg shadow-sm ${isDarkMode ? 'border border-gray-700' : 'border border-rose-200'}`}>
+//         <table className="min-w-full table-auto text-sm">
+//           <thead className={`${isDarkMode ? 'bg-gray-700' : 'bg-rose-100'} text-left`}>
 //             <tr>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Book No
-//               </th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Title
-//               </th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Author
-//               </th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Medium
-//               </th>
-//               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-//                 Actions
-//               </th>
+//               {["Book No", "Title", "Author", "Medium", "Actions"].map((col) => (
+//                 <th key={col} className="px-6 py-3 font-medium uppercase tracking-wide text-gray-500">
+//                   {col}
+//                 </th>
+//               ))}
 //             </tr>
 //           </thead>
-//           <tbody className="divide-y divide-gray-200">
+//           <tbody>
 //             {filteredBooks.length > 0 ? (
-//               filteredBooks.map((book) => (
-//                 <tr key={book._id} className={book.isIssued ? "bg-yellow-100" : ""}>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-//                     {book.bookNo}
+//               filteredBooks.map((book, index) => (
+//                 <tr
+//                   key={book._id}
+//                   className={`transition ${
+//                     index % 2 === 0
+//                       ? isDarkMode ? 'bg-gray-800' : 'bg-rose-50'
+//                       : isDarkMode ? 'bg-gray-900' : 'bg-rose-100'
+//                   } hover:${isDarkMode ? 'bg-gray-700' : 'bg-rose-200'} ${
+//                     book.isIssued ? 'opacity-70' : ''
+//                   }`}
+//                 >
+//                   <td className="px-6 py-4">
+//                     {(() => {
+//                       const [prefix, number] = book.bookNo.includes(" - ")
+//                         ? book.bookNo.split(" - ")
+//                         : ["", book.bookNo];
+//                       return (
+//                         <div className="flex items-center gap-2">
+//                           <span
+//                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
+//                               prefix === "P"
+//                                 ? "bg-purple-200 text-purple-800"
+//                                 : prefix === "S"
+//                                 ? "bg-pink-200 text-pink-800"
+//                                 : "bg-gray-200 text-gray-800"
+//                             }`}
+//                           >
+//                             {prefix}
+//                           </span>
+//                           <span className="text-sm font-medium">{number}</span>
+//                         </div>
+//                       );
+//                     })()}
 //                   </td>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.nameOfBook}</td>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.nameOfAuthor}</td>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.medium}</td>
-//                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
+//                   <td className="px-6 py-4">{book.nameOfBook}</td>
+//                   <td className="px-6 py-4">{book.nameOfAuthor}</td>
+//                   <td className="px-6 py-4">{book.medium}</td>
+//                   <td className="px-6 py-4 flex gap-3">
 //                     <button
 //                       onClick={() => setSelectedBook(book)}
-//                       className="py-1 px-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+//                       className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md transition"
 //                     >
-//                       Issue Book
+//                       Issue
 //                     </button>
 //                     <button
 //                       onClick={() => {
 //                         setBookToDelete(book);
 //                         setIsModalOpen(true);
 //                       }}
-//                       className="py-1 px-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+//                       className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md transition"
 //                     >
 //                       Delete
 //                     </button>
@@ -299,7 +193,7 @@
 //               ))
 //             ) : (
 //               <tr>
-//                 <td colSpan="5" className="px-6 py-4 text-center text-gray-700">
+//                 <td colSpan="5" className="text-center px-6 py-6 text-gray-500">
 //                   No books found.
 //                 </td>
 //               </tr>
@@ -309,35 +203,28 @@
 //       </div>
 
 //       {/* Pagination */}
-//       <div className="flex justify-between items-center mt-4">
+//       <div className="flex justify-between items-center mt-6">
 //         <button
 //           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
 //           disabled={currentPage === 1}
-//           className="py-2 px-4 border border-gray-300 rounded-md text-black bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
+//           className="px-4 py-2 rounded-full text-sm font-medium border shadow-sm disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 hover:bg-gray-300"
 //         >
-//           Previous
+//           ← Previous
 //         </button>
-//         <span className="text-gray-700">
-//           Page {currentPage} of {totalPages}
-//         </span>
+//         <span className="text-sm text-gray-600">Page {currentPage} of {totalPages}</span>
 //         <button
 //           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
 //           disabled={currentPage === totalPages}
-//           className="py-2 px-4 border border-gray-300 text-black rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
+//           className="px-4 py-2 rounded-full text-sm font-medium border shadow-sm disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 hover:bg-gray-300"
 //         >
-//           Next
+//           Next →
 //         </button>
 //       </div>
 
-//       {/* IssueBook Modal */}
+//       {/* Modals */}
 //       {selectedBook && (
-//         <IssueBook
-//           book={selectedBook}
-//           onClose={() => setSelectedBook(null)}
-//         />
+//         <IssueBook book={selectedBook} onClose={() => setSelectedBook(null)} />
 //       )}
-
-//       {/* Confirmation Modal */}
 //       <ConfirmationModal
 //         isOpen={isModalOpen}
 //         onClose={() => {
@@ -353,177 +240,468 @@
 
 // export default BookList;
 
-// client/components/BookList.js
+
+// 'use client';
+
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import IssueBook from "./IssueBook";
+// import ConfirmationModal from "./ConfirmationModal";
+
+// const BookList = ({ isDarkMode }) => {
+//   const [books, setBooks] = useState([]);
+//   const [totalPages, setTotalPages] = useState(1);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [selectedBook, setSelectedBook] = useState(null);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [bookToDelete, setBookToDelete] = useState(null);
+//   const [filter, setFilter] = useState("All");
+//   const [totalAvailableBooks, setTotalAvailableBooks] = useState(0); // New
+
+//   useEffect(() => {
+//     const fetchBooks = async () => {
+//       try {
+//         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/books/displaybooks`, {
+//           params: { page: currentPage, limit: 6 },
+//         });
+//         setBooks(response.data.books);
+//         setTotalPages(response.data.totalPages);
+
+//         // Calculate total available (not issued) books
+//         const availableBooksCount = response.data.books.filter((book) => !book.isIssued).length;
+//         setTotalAvailableBooks(availableBooksCount);
+
+//       } catch (err) {
+//         setError("Failed to fetch books. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchBooks();
+//   }, [currentPage]);
+
+//   const handleSearch = (e) => {
+//     setSearchTerm(e.target.value);
+//     setCurrentPage(1);
+//   };
+
+//   const handleDelete = async () => {
+//     try {
+//       const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/books/delete/${bookToDelete._id}`);
+//       if (response.data.success) {
+//         setBooks((prevBooks) => prevBooks.filter((book) => book._id !== bookToDelete._id));
+//         setIsModalOpen(false);
+//         setBookToDelete(null);
+//         // Recalculate total available books
+//         setTotalAvailableBooks((prev) => prev - (bookToDelete.isIssued ? 0 : 1));
+//       }
+//     } catch (err) {
+//       alert(err.response?.data?.message || "Failed to delete the book.");
+//     }
+//   };
+
+//   // Apply search filter
+//   let filteredBooks = books.filter((book) =>
+//     book.bookNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//     book.nameOfBook.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//     book.nameOfAuthor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//     book.medium.toLowerCase().includes(searchTerm.toLowerCase())
+//   );
+
+//   // Apply prefix filter
+//   if (filter === "P") {
+//     filteredBooks = filteredBooks.filter((book) => book.bookNo.startsWith("P -"));
+//   } else if (filter === "S") {
+//     filteredBooks = filteredBooks.filter((book) => book.bookNo.startsWith("S -"));
+//   }
+
+//   if (loading) {
+//     return <p className="text-center text-gray-600 text-lg">Loading books...</p>;
+//   }
+
+//   if (error) {
+//     return <p className="text-center text-red-500 text-lg">{error}</p>;
+//   }
+
+//   return (
+//     <div className={`p-8 rounded-2xl shadow-xl border transition-colors duration-300 ${
+//       isDarkMode ? 'bg-[#1e1e2f] text-white border-gray-700' : 'bg-pink-100 text-gray-900 border-gray-200'
+//     }`}>
+
+//       {/* Search Bar */}
+//       <div className="mb-6">
+//         <input
+//           type="text"
+//           placeholder="🔍 Search by Book No, Title, Author, or Medium"
+//           value={searchTerm}
+//           onChange={handleSearch}
+//           className={`w-full px-4 py-3 rounded-xl border text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm transition ${
+//             isDarkMode ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-800 border-gray-300'
+//           }`}
+//         />
+//       </div>
+
+//       {/* Filter Buttons */}
+//       <div className="flex gap-3 mb-6">
+//         {["All", "P", "S"].map((type) => (
+//           <button
+//             key={type}
+//             onClick={() => setFilter(type)}
+//             className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+//               filter === type
+//                 ? 'bg-indigo-600 text-white'
+//                 : isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-700'
+//             }`}
+//           >
+//             {type === "All" ? "All Books" : `Books Starting with ${type}`}
+//           </button>
+//         ))}
+//       </div>
+
+//       {/* Total Counts */}
+//       <div className="mb-4 text-lg font-semibold space-y-1">
+//         <div>📘 Total Available Books: <span className="text-indigo-600 font-bold">{totalAvailableBooks}</span></div>
+//         <div>📚 Displaying (after filters): <span className="text-indigo-600 font-bold">{filteredBooks.length}</span> books</div>
+//       </div>
+
+//       {/* Table */}
+//       <div className={`overflow-x-auto rounded-lg shadow-sm ${isDarkMode ? 'border border-gray-700' : 'border border-rose-200'}`}>
+//         <table className="min-w-full table-auto text-sm">
+//           <thead className={`${isDarkMode ? 'bg-gray-700' : 'bg-rose-100'} text-left`}>
+//             <tr>
+//               {["Book No", "Title", "Author", "Medium", "Actions"].map((col) => (
+//                 <th key={col} className="px-6 py-3 font-medium uppercase tracking-wide text-gray-500">
+//                   {col}
+//                 </th>
+//               ))}
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {filteredBooks.length > 0 ? (
+//               filteredBooks.map((book, index) => (
+//                 <tr
+//                   key={book._id}
+//                   className={`transition ${
+//                     index % 2 === 0
+//                       ? isDarkMode ? 'bg-gray-800' : 'bg-rose-50'
+//                       : isDarkMode ? 'bg-gray-900' : 'bg-rose-100'
+//                   } hover:${isDarkMode ? 'bg-gray-700' : 'bg-rose-200'} ${
+//                     book.isIssued ? 'opacity-70' : ''
+//                   }`}
+//                 >
+//                   <td className="px-6 py-4">
+//                     {(() => {
+//                       const [prefix, number] = book.bookNo.includes(" - ")
+//                         ? book.bookNo.split(" - ")
+//                         : ["", book.bookNo];
+//                       return (
+//                         <div className="flex items-center gap-2">
+//                           <span
+//                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
+//                               prefix === "P"
+//                                 ? "bg-purple-200 text-purple-800"
+//                                 : prefix === "S"
+//                                 ? "bg-pink-200 text-pink-800"
+//                                 : "bg-gray-200 text-gray-800"
+//                             }`}
+//                           >
+//                             {prefix}
+//                           </span>
+//                           <span className="text-sm font-medium">{number}</span>
+//                         </div>
+//                       );
+//                     })()}
+//                   </td>
+//                   <td className="px-6 py-4">{book.nameOfBook}</td>
+//                   <td className="px-6 py-4">{book.nameOfAuthor}</td>
+//                   <td className="px-6 py-4">{book.medium}</td>
+//                   <td className="px-6 py-4 flex gap-3">
+//                     <button
+//                       onClick={() => setSelectedBook(book)}
+//                       className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md transition"
+//                     >
+//                       Issue
+//                     </button>
+//                     <button
+//                       onClick={() => {
+//                         setBookToDelete(book);
+//                         setIsModalOpen(true);
+//                       }}
+//                       className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md transition"
+//                     >
+//                       Delete
+//                     </button>
+//                   </td>
+//                 </tr>
+//               ))
+//             ) : (
+//               <tr>
+//                 <td colSpan="5" className="text-center px-6 py-6 text-gray-500">
+//                   No books found.
+//                 </td>
+//               </tr>
+//             )}
+//           </tbody>
+//         </table>
+//       </div>
+
+//       {/* Pagination */}
+//       <div className="flex justify-between items-center mt-6">
+//         <button
+//           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+//           disabled={currentPage === 1}
+//           className="px-4 py-2 rounded-full text-sm font-medium border shadow-sm disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 hover:bg-gray-300"
+//         >
+//           ← Previous
+//         </button>
+//         <span className="text-sm text-gray-600">Page {currentPage} of {totalPages}</span>
+//         <button
+//           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+//           disabled={currentPage === totalPages}
+//           className="px-4 py-2 rounded-full text-sm font-medium border shadow-sm disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 hover:bg-gray-300"
+//         >
+//           Next →
+//         </button>
+//       </div>
+
+//       {/* Modals */}
+//       {selectedBook && (
+//         <IssueBook book={selectedBook} onClose={() => setSelectedBook(null)} />
+//       )}
+//       <ConfirmationModal
+//         isOpen={isModalOpen}
+//         onClose={() => {
+//           setIsModalOpen(false);
+//           setBookToDelete(null);
+//         }}
+//         onConfirm={handleDelete}
+//         message={`Are you sure you want to delete the book "${bookToDelete?.nameOfBook}"?`}
+//       />
+//     </div>
+//   );
+// };
+
+// export default BookList;
+
+
 'use client';
 
 import { useEffect, useState } from "react";
 import axios from "axios";
 import IssueBook from "./IssueBook";
-import ConfirmationModal from "./ConfirmationModal"; // Import the ConfirmationModal
+import ConfirmationModal from "./ConfirmationModal";
 
 const BookList = ({ isDarkMode }) => {
-  const [books, setBooks] = useState([]); // State to store the list of books
-  const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
-  const [currentPage, setCurrentPage] = useState(1); // Current page
-  const [loading, setLoading] = useState(true); // State to track loading status
-  const [error, setError] = useState(null); // State to handle errors
-  const [searchTerm, setSearchTerm] = useState(""); // State for search input
-  const [selectedBook, setSelectedBook] = useState(null); // State to manage the issue modal
-
-  // State for confirmation modal
+  const [books, setBooks] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedBook, setSelectedBook] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [bookToDelete, setBookToDelete] = useState(null);
+  const [filter, setFilter] = useState("All");
+  const [totalAvailableBooks, setTotalAvailableBooks] = useState(0); // Total available books count
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    const fetchBooksAndCounts = async () => {
       try {
+        // Fetch paginated books
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/books/displaybooks`, {
-          params: { page: currentPage, limit: 6 }, // Fetch 6 books per page
+          params: { page: currentPage, limit: 6 },
         });
         setBooks(response.data.books);
         setTotalPages(response.data.totalPages);
+
+        // Fetch total available books count using the /available/count API
+        const availableCountResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/books/count`);
+        setTotalAvailableBooks(availableCountResponse.data.availableCount);
       } catch (err) {
-        setError("Failed to fetch books. Please try again.");
+        setError("Failed to fetch books or counts. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBooks();
-  }, [currentPage, searchTerm]);
+    fetchBooksAndCounts();
+  }, [currentPage]);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to the first page when searching
+    setCurrentPage(1);
   };
 
   const handleDelete = async () => {
     try {
       const response = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/books/delete/${bookToDelete._id}`);
       if (response.data.success) {
-        // Remove the deleted book from the local state
         setBooks((prevBooks) => prevBooks.filter((book) => book._id !== bookToDelete._id));
-        setIsModalOpen(false); // Close the modal
-        setBookToDelete(null); // Reset the book to delete
+        setIsModalOpen(false);
+        setBookToDelete(null);
+
+        // Recalculate total available books after deletion
+        const availableCountResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/books/count`);
+        setTotalAvailableBooks(availableCountResponse.data.availableCount);
       }
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete the book.");
     }
   };
 
-  const filteredBooks = books.filter((book) =>
-    book.bookNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.nameOfBook.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.nameOfAuthor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.medium.toLowerCase().includes(searchTerm.toLowerCase())
+  // Apply search filter
+  let filteredBooks = books.filter(
+    (book) =>
+      book.bookNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.nameOfBook.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.nameOfAuthor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.medium.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Apply prefix filter
+  if (filter === "P") {
+    filteredBooks = filteredBooks.filter((book) => book.bookNo.startsWith("P -"));
+  } else if (filter === "S") {
+    filteredBooks = filteredBooks.filter((book) => book.bookNo.startsWith("S -"));
+  }
+
   if (loading) {
-    return <p className="text-center text-gray-700">Loading books...</p>;
+    return <p className="text-center text-gray-600 text-lg">Loading books...</p>;
   }
 
   if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
+    return <p className="text-center text-red-500 text-lg">{error}</p>;
   }
 
   return (
-    <div className={`p-6 rounded-lg shadow-md relative ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
-      {/* Search Input */}
-      <input
-        type="text"
-        placeholder="Search by Book No, Title, Author, or Medium"
-        value={searchTerm}
-        onChange={handleSearch}
-        className={`w-full px-3 py-2 mb-4 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-          isDarkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-700 border-gray-300'
-        }`}
-      />
+    <div
+      className={`p-8 rounded-2xl shadow-xl border transition-colors duration-300 ${
+        isDarkMode ? 'bg-[#1e1e2f] text-white border-gray-700' : 'bg-pink-100 text-gray-900 border-gray-200'
+      }`}
+    >
+      {/* Search Bar */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="🔍 Search by Book No, Title, Author, or Medium"
+          value={searchTerm}
+          onChange={handleSearch}
+          className={`w-full px-4 py-3 rounded-xl border text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none shadow-sm transition ${
+            isDarkMode ? 'bg-gray-800 text-white border-gray-600' : 'bg-white text-gray-800 border-gray-300'
+          }`}
+        />
+      </div>
 
-      {/* Display Total Available Books */}
-      <div className="mb-4">
-        <p className="text-lg font-medium">
-          Total Available Books:{" "}
-          <span className="font-bold">
-            {books.filter((book) => !book.isIssued).length}
-          </span>
-        </p>
+      {/* Filter Buttons */}
+      <div className="flex gap-3 mb-6">
+        {["All", "P", "S"].map((type) => (
+          <button
+            key={type}
+            onClick={() => setFilter(type)}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+              filter === type
+                ? 'bg-indigo-600 text-white'
+                : isDarkMode
+                ? 'bg-gray-700 text-white'
+                : 'bg-white text-gray-700'
+            }`}
+          >
+            {type === "All" ? "All Books" : `Books Starting with ${type}`}
+          </button>
+        ))}
+      </div>
+
+      {/* Total Counts */}
+      <div className="mb-4 text-lg font-semibold space-y-1">
+        <div>
+          📚 Total Available Books (Not Issued):{" "}
+          <span className="text-indigo-600 font-bold">{totalAvailableBooks}</span>
+        </div>
+        <div>
+          📖 Displaying (after filters):{" "}
+          <span className="text-indigo-600 font-bold">{filteredBooks.length}</span> books
+        </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
-        <table className={`min-w-full divide-y ${isDarkMode ? 'divide-gray-600' : 'divide-gray-200'}`}>
-          <thead className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+      <div
+        className={`overflow-x-auto rounded-lg shadow-sm ${
+          isDarkMode ? 'border border-gray-700' : 'border border-rose-200'
+        }`}
+      >
+        <table className="min-w-full table-auto text-sm">
+          <thead className={`${isDarkMode ? 'bg-gray-700' : 'bg-rose-100'} text-left`}>
             <tr>
-              <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                isDarkMode ? 'text-gray-300' : 'text-gray-500'
-              }`}>
-                Book No
-              </th>
-              <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                isDarkMode ? 'text-gray-300' : 'text-gray-500'
-              }`}>
-                Title
-              </th>
-              <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                isDarkMode ? 'text-gray-300' : 'text-gray-500'
-              }`}>
-                Author
-              </th>
-              <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                isDarkMode ? 'text-gray-300' : 'text-gray-500'
-              }`}>
-                Medium
-              </th>
-              <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
-                isDarkMode ? 'text-gray-300' : 'text-gray-500'
-              }`}>
-                Actions
-              </th>
+              {["Book No", "Title", "Author", "Medium", "Actions"].map((col) => (
+                <th
+                  key={col}
+                  className="px-6 py-3 font-medium uppercase tracking-wide text-gray-500"
+                >
+                  {col}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className={`divide-y ${isDarkMode ? 'divide-gray-600' : 'divide-gray-200'}`}>
+          <tbody>
             {filteredBooks.length > 0 ? (
-              filteredBooks.map((book) => (
-                <tr key={book._id} className={book.isIssued ? "bg-yellow-100" : ""}>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-900'
-                  }`}>
-                    {book.bookNo}
+              filteredBooks.map((book, index) => (
+                <tr
+                  key={book._id}
+                  className={`transition ${
+                    index % 2 === 0
+                      ? isDarkMode
+                        ? 'bg-gray-800'
+                        : 'bg-rose-50'
+                      : isDarkMode
+                      ? 'bg-gray-900'
+                      : 'bg-rose-100'
+                  } hover:${isDarkMode ? 'bg-gray-700' : 'bg-rose-200'} ${
+                    book.isIssued ? 'opacity-70' : ''
+                  }`}
+                >
+                  <td className="px-6 py-4">
+                    {(() => {
+                      const [prefix, number] = book.bookNo.includes(" - ")
+                        ? book.bookNo.split(" - ")
+                        : ["", book.bookNo];
+                      return (
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              prefix === "P"
+                                ? "bg-purple-200 text-purple-800"
+                                : prefix === "S"
+                                ? "bg-pink-200 text-pink-800"
+                                : "bg-gray-200 text-gray-800"
+                            }`}
+                          >
+                            {prefix}
+                          </span>
+                          <span className="text-sm font-medium">{number}</span>
+                        </div>
+                      );
+                    })()}
                   </td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
-                    {book.nameOfBook}
-                  </td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
-                    {book.nameOfAuthor}
-                  </td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
-                    {book.medium}
-                  </td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm space-x-2 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-500'
-                  }`}>
+                  <td className="px-6 py-4">{book.nameOfBook}</td>
+                  <td className="px-6 py-4">{book.nameOfAuthor}</td>
+                  <td className="px-6 py-4">{book.medium}</td>
+                  <td className="px-6 py-4 flex gap-3">
                     <button
                       onClick={() => setSelectedBook(book)}
-                      className={`py-1 px-2 rounded-md hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                        isDarkMode ? 'bg-indigo-500 text-white' : 'bg-indigo-600 text-white'
-                      }`}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md transition"
                     >
-                      Issue Book
+                      Issue
                     </button>
                     <button
                       onClick={() => {
                         setBookToDelete(book);
                         setIsModalOpen(true);
                       }}
-                      className={`py-1 px-2 rounded-md hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                        isDarkMode ? 'bg-red-500 text-white' : 'bg-red-600 text-white'
-                      }`}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-md transition"
                     >
                       Delete
                     </button>
@@ -532,9 +710,7 @@ const BookList = ({ isDarkMode }) => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className={`px-6 py-4 text-center ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}>
+                <td colSpan="5" className="text-center px-6 py-6 text-gray-500">
                   No books found.
                 </td>
               </tr>
@@ -544,39 +720,28 @@ const BookList = ({ isDarkMode }) => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-6">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className={`py-2 px-4 border rounded-md ${
-            isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-black'
-          }`}
+          className="px-4 py-2 rounded-full text-sm font-medium border shadow-sm disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 hover:bg-gray-300"
         >
-          Previous
+          ← Previous
         </button>
-        <span className={`text-gray-700 ${isDarkMode ? 'text-gray-300' : ''}`}>
-          Page {currentPage} of {totalPages}
-        </span>
+        <span className="text-sm text-gray-600">Page {currentPage} of {totalPages}</span>
         <button
           onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
-          className={`py-2 px-4 border rounded-md ${
-            isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-black'
-          }`}
+          className="px-4 py-2 rounded-full text-sm font-medium border shadow-sm disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 hover:bg-gray-300"
         >
-          Next
+          Next →
         </button>
       </div>
 
-      {/* IssueBook Modal */}
+      {/* Modals */}
       {selectedBook && (
-        <IssueBook
-          book={selectedBook}
-          onClose={() => setSelectedBook(null)}
-        />
+        <IssueBook book={selectedBook} onClose={() => setSelectedBook(null)} />
       )}
-
-      {/* Confirmation Modal */}
       <ConfirmationModal
         isOpen={isModalOpen}
         onClose={() => {
