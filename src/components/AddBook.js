@@ -661,7 +661,7 @@ const AddBook = ({ isDarkMode }) => {
     "backdrop-blur-lg bg-white/70 dark:bg-white/5 rounded-2xl shadow-xl border border-white/30 p-8";
 
   return (
-    <div className={`${containerBg} min-h-screen flex items-center justify-center px-4 py-8`}>
+    <div className={`${containerBg} min-h-screen flex items-center justify-center px-4 py-1`}>
       <div className={cardStyles + " w-full max-w-xl space-y-6"}>
         <h2 className="text-3xl font-extrabold text-center bg-gradient-to-r from-pink-500 to-violet-600 text-transparent bg-clip-text">
           📚 Add a New Book

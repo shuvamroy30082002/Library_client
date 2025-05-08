@@ -513,7 +513,7 @@ const BookList = ({ isDarkMode }) => {
       try {
         // Fetch paginated books
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/books/displaybooks`, {
-          params: { page: currentPage, limit: 6 },
+          params: { page: currentPage, limit: 20 },
         });
         setBooks(response.data.books);
         setTotalPages(response.data.totalPages);

@@ -121,7 +121,7 @@ export default function DashboardPage() {
 
   return (
  
-    <div className={`flex min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`flex min-h-screen py-15 lg:py-0 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Sidebar */}
       <Sidebar
         setActiveComponent={setActiveComponent}
@@ -131,14 +131,14 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       
-      <div className="flex-1 overflow-y-auto h-screen p-4 md:p-8">
-        <h1 className={`text-xl md:text-2xl font-bold ${
+      <div className="flex-1 overflow-y-auto h-screen p-4 md:p-8 lg:py-0">
+        <h1 className={`text-xl md:text-2xl font-bold lg:py-0 ${
           isDarkMode ? 'text-indigo-400' : 'text-indigo-700'
         } mb-4 md:mb-6`}>
           {activeComponent === "books"
             ? "Book List"
             : activeComponent === "add-book"
-            ? "Add New Book"
+            ? ""
             : activeComponent === "profile"
             ? "Profile"
             : activeComponent === "settings"
