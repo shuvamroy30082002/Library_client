@@ -294,7 +294,7 @@ const IssuedBooks = ({ isDarkMode }) => {
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
             <thead>
               <tr>
-                {["Book No", "Name of Book", "Issue Date", "Return Date", "Days Passed", "Fine (₹)", "Actions"].map((title) => (
+                {["Book No", "Name of Book","Person Issued", "Issue Date", "Return Date", "Days Passed", "Fine (₹)", "Actions"].map((title) => (
                   <th key={title} className={tableHeader}>{title}</th>
                 ))}
               </tr>
@@ -304,6 +304,7 @@ const IssuedBooks = ({ isDarkMode }) => {
                 <tr key={book._id} className={`${isDarkMode ? 'odd:bg-gray-800' : 'odd:bg-white even:bg-indigo-50'}`}>
                   <td className={cellClass}>{book.bookNo}</td>
                   <td className={cellClass}>{book.nameOfBook}</td>
+                  <td className={cellClass}>{book.issuedTo}</td>
                   <td className={cellClass}>{new Date(book.dateOfIssue).toLocaleDateString()}</td>
                   <td className={cellClass}>{new Date(book.dateOfReturn).toLocaleDateString()}</td>
                   <td className={cellClass}>{book.daysPassed - 1} day{book.daysPassed > 1 ? 's' : ''}</td>
