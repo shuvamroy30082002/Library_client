@@ -573,6 +573,161 @@
 
 
 
+// 'use client';
+
+// import { useState } from 'react';
+// import { Moon, Sun, Menu, LogOut } from 'lucide-react';
+// import axios from 'axios';
+
+// const Sidebar = ({ setActiveComponent, isDarkMode, setIsDarkMode }) => {
+//   const [isOpen, setIsOpen] = useState(false);
+
+//   const menuItems = [
+//     { name: "Books", value: "books" },
+//     { name: "Add Book", value: "add-book" },
+//     { name: "Book Issued", value: "issued" },
+//   ];
+
+//   const settingsItems = [
+//     { name: "Fine Configuration", value: "fine-config" },
+//     { name: "Activity Log", value: "activity-log" },
+//   ];
+
+//   const handleLogout = async () => {
+//     try {
+//       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`);
+//       window.location.href = "/login"; // Redirect after logout
+//     } catch (error) {
+//       console.error("Logout failed:", error);
+//     }
+//   };
+
+//   return (
+//     <>
+//       {/* Mobile Menu Button */}
+//       <div className="md:hidden fixed top-5 left-5 z-50">
+//         <button
+//           onClick={() => setIsOpen(true)}
+//           className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-tr from-fuchsia-600 to-pink-500 shadow-xl animate-pulse hover:scale-105 transition-transform duration-300"
+//         >
+//           <Menu className="text-white w-6 h-6" />
+//         </button>
+//       </div>
+
+//       {/* Overlay */}
+//       {isOpen && (
+//         <div
+//           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
+//           onClick={() => setIsOpen(false)}
+//         />
+//       )}
+
+//       {/* Sidebar */}
+//       <aside
+//         className={`
+//           fixed md:static top-0 left-0 h-screen w-72 z-50 transition-all duration-500 ease-in-out
+//           ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
+//           ${isDarkMode
+//             ? 'bg-gradient-to-b from-[#0d0d15] to-[#1a1a2e] text-gray-200'
+//             : 'bg-gradient-to-b from-[#f8f4f0] to-[#f1ebe6] text-gray-900'}
+//           shadow-2xl border-r border-transparent md:border-r-2 border-opacity-10 px-6 py-8 flex flex-col justify-between
+//         `}
+//       >
+//         <div>
+//           {/* Logo */}
+//           <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-pink-400 dark:to-purple-400 mb-10 tracking-tight animate-fade-in">
+//             📚 LibMaster
+//           </h2>
+
+//           {/* Book Management */}
+//           <div className="mb-6">
+//             <p className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+//               Book Management
+//             </p>
+//             <div className="space-y-2">
+//               {menuItems.map((item) => (
+//                 <button
+//                   key={item.value}
+//                   onClick={() => {
+//                     setActiveComponent(item.value);
+//                     setIsOpen(false);
+//                   }}
+//                   className={`w-full text-left px-5 py-2.5 rounded-lg font-medium transition-all duration-300
+//                     bg-opacity-40 hover:bg-opacity-100 transform hover:scale-[1.03] backdrop-blur
+//                     ${
+//                       isDarkMode
+//                         ? 'bg-gray-800 hover:bg-indigo-500 text-gray-100 hover:text-white shadow hover:shadow-indigo-700/50'
+//                         : 'bg-purple-100 hover:bg-purple-500 text-purple-800 hover:text-white shadow hover:shadow-purple-500/40'
+//                     }`}
+//                 >
+//                   {item.name}
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
+
+//           {/* Settings */}
+//           <div className="pt-4 border-t border-gray-300 dark:border-gray-700">
+//             <p className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 mt-4">
+//               Settings
+//             </p>
+//             <div className="space-y-2">
+//               {settingsItems.map((item) => (
+//                 <button
+//                   key={item.value}
+//                   onClick={() => {
+//                     setActiveComponent(item.value);
+//                     setIsOpen(false);
+//                   }}
+//                   className={`w-full text-left px-5 py-2.5 rounded-lg font-medium transition-all duration-300
+//                     bg-opacity-40 hover:bg-opacity-100 transform hover:scale-[1.03] backdrop-blur
+//                     ${
+//                       isDarkMode
+//                         ? 'bg-gray-800 hover:bg-fuchsia-500 text-gray-100 hover:text-white shadow hover:shadow-fuchsia-600/50'
+//                         : 'bg-fuchsia-100 hover:bg-fuchsia-500 text-fuchsia-800 hover:text-white shadow hover:shadow-fuchsia-500/40'
+//                     }`}
+//                 >
+//                   {item.name}
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Footer: Theme & Logout */}
+//         <div className="mt-6 border-t border-gray-300 dark:border-gray-700 pt-5 flex items-center justify-between">
+//           <button
+//             onClick={() => setIsDarkMode(!isDarkMode)}
+//             className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:scale-110 transition-transform"
+//             title="Toggle Theme"
+//           >
+//             {isDarkMode ? (
+//               <Moon className="text-yellow-300 w-5 h-5" />
+//             ) : (
+//               <Sun className="text-yellow-500 w-5 h-5" />
+//             )}
+//           </button>
+//           <button
+//             onClick={handleLogout}
+//             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition duration-300
+//               ${
+//                 isDarkMode
+//                   ? 'bg-red-600 text-white hover:bg-red-700'
+//                   : 'bg-red-100 text-red-700 hover:bg-red-500 hover:text-white'
+//               }`}
+//           >
+//             <LogOut className="w-4 h-4" />
+//             Logout
+//           </button>
+//         </div>
+//       </aside>
+//     </>
+//   );
+// };
+
+// export default Sidebar;
+
+
 'use client';
 
 import { useState } from 'react';
@@ -588,6 +743,11 @@ const Sidebar = ({ setActiveComponent, isDarkMode, setIsDarkMode }) => {
     { name: "Book Issued", value: "issued" },
   ];
 
+  const userItems = [
+    { name: "View Users", value: "users" },
+    // Add more items here if needed like { name: "Add User", value: "add-user" }
+  ];
+
   const settingsItems = [
     { name: "Fine Configuration", value: "fine-config" },
     { name: "Activity Log", value: "activity-log" },
@@ -596,7 +756,7 @@ const Sidebar = ({ setActiveComponent, isDarkMode, setIsDarkMode }) => {
   const handleLogout = async () => {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`);
-      window.location.href = "/login"; // Redirect after logout
+      window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -658,6 +818,33 @@ const Sidebar = ({ setActiveComponent, isDarkMode, setIsDarkMode }) => {
                       isDarkMode
                         ? 'bg-gray-800 hover:bg-indigo-500 text-gray-100 hover:text-white shadow hover:shadow-indigo-700/50'
                         : 'bg-purple-100 hover:bg-purple-500 text-purple-800 hover:text-white shadow hover:shadow-purple-500/40'
+                    }`}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Users Section */}
+          <div className="mb-6">
+            <p className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+              Users
+            </p>
+            <div className="space-y-2">
+              {userItems.map((item) => (
+                <button
+                  key={item.value}
+                  onClick={() => {
+                    setActiveComponent(item.value);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full text-left px-5 py-2.5 rounded-lg font-medium transition-all duration-300
+                    bg-opacity-40 hover:bg-opacity-100 transform hover:scale-[1.03] backdrop-blur
+                    ${
+                      isDarkMode
+                        ? 'bg-gray-800 hover:bg-teal-500 text-gray-100 hover:text-white shadow hover:shadow-teal-600/50'
+                        : 'bg-teal-100 hover:bg-teal-500 text-teal-800 hover:text-white shadow hover:shadow-teal-500/40'
                     }`}
                 >
                   {item.name}
